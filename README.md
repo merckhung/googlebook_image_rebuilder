@@ -1,9 +1,10 @@
-# googlebookos Image Rebuilder
+# GooglebookOS Image Rebuilder
 
-`googlebookos` is a toolkit for adapting public **Android 17 desktop USB
-recovery images** to the ASUS Chromebook Plus CX34, ASUS ExpertBook CX54, and
-LG gram Book 15U50U. It produces a model-specific image that boots through UEFI,
-with optional tooling for installation onto internal storage and later updates.
+`GooglebookOS Image Rebuilder` is a toolkit for adapting public **Android 17
+desktop USB recovery images** to the ASUS Chromebook Plus CX34, ASUS ExpertBook
+CX54, and LG gram Book 15U50U. It produces a model-specific image that boots
+through UEFI, with optional tooling for installation onto internal storage and
+later updates.
 
 The rebuild starts with a released Lapis recovery image. It verifies the input,
 extracts its partitions, applies the selected device profile, supplies pinned
@@ -35,10 +36,6 @@ an image. Build and boot-check results are recorded in
 | ASUS ExpertBook CX54 / CX5403 | `screebo` | Passed | Passed |
 | LG gram Book 15U50U-H.AR55U1 | `lg-15u50u` | Passed | Passed (serial debug) |
 <!-- BUILD_RESULTS_END -->
-
-LG reached Android boot completion using the existing **serial-debug** UEFI
-menu entry; its initial quiet-entry test timed out after 420 seconds. Boot
-checks do not establish full compatibility on the physical laptops.
 
 ## Demo video
 
