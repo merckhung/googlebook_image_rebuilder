@@ -1,0 +1,57 @@
+# Project-wide rules for every device profile (builder/lib/devprofile.py). A profile can add to them, never remove
+# from them: its own stock_drop must not drop a safety option, its add/tail options must not start with a forbidden
+# prefix, and its module_blacklist must contain every required module.
+schema = 1
+
+[cmdline]
+# stock options of the lapis vendor_boot command line that never reach an entry: the stock console off-switch, pKVM and
+# FRED, the SPI flash write switches, the watchdog panics and the performance governor (replaced in the tail below)
+stock_drop = ["console=null", "kvm-intel.pkvm=1", "fred=on", "spi-intel.writeable=1", "spi-intel.ignore_protection_status=1",
+              "softlockup_panic=1", "nmi_watchdog=panic", "pm.dpm_watchdog_enabled=1", "cpufreq.default_governor=performance"]
+# appended to every entry, before the profile's own tail: the internal NVMe and the ME interface stay hidden from the USB
+# image, no EFI runtime services (no EFI variable writes) and no EFI pstore, no panics/watchdog reboots
+tail = ["initcall_blacklist=nvme_init,mei_me_driver_init", "efi=noruntime", "efi_pstore.pstore_disable=1", "panic=0",
+        "softlockup_panic=0", "nmi_watchdog=0", "pm.dpm_watchdog_enabled=0", "cpufreq.default_governor=schedutil"]
+# a profile option with one of these prefixes could override the builder's own items later on the line
+forbidden_prefixes = ["module_blacklist=", "initcall_blacklist=", "efi=", "efi_pstore.", "spi-intel.", "lockdown="]
+
+[blacklist]
+# every entry blocks these (the v0.1 hard blacklist, whole): the TPM on every transport (tpm, tpm_tis*, the Cr50 one), the
+# ChromeOS EC on LPC, SPI, I2C, ISH and USB with its core, chardev, debugfs, sysfs, VBC and every EC-backed
+# peripheral driver (I2C tunnel, chargers, Type-C, sensors, keyboard, lightbar, LEDs, CEC, Wilco), SPI flash (controller,
+# MTD, SPI NOR, spidev), Google SMI (GSMI writes firmware variables), chromeos_acpi, NVRAM, i2c-dev, AT24 EEPROMs,
+# Thunderbolt (DMA, USB4 retimer NVM), the touch controllers' QuickI2C/QuickSPI hosts (touch firmware), HPS and the hammer
+# keyboard. Blocking a module a machine does not have costs nothing. A GBOS_EC image (KANO only) releases exactly
+# builder/image.py's EC_CORE and the chosen features' drivers; everything in EC_NEVER stays in every entry.
+# UART (cros_ec_uart) and RPMSG (cros_ec_rpmsg) are not in this pinned v0.1 list; the dev-kernel gate
+# refuses CONFIG_CROS_EC_UART / CONFIG_CROS_EC_RPMSG as =y and as =m unless the profile blacklist names them, and
+# EC variants append both via builder/image.py EC_EXTRA_BLOCK.
+required = ["cros_ec_debugfs", "tpm_tis_i2c_cr50", "cros_ec_lpcs", "cros_ec_usb", "spi_intel_pci", "spi_intel",
+            "i2c_dev", "thunderbolt", "tpm", "tpm_tis", "tpm_tis_core", "tpm_tis_spi", "cros_ec",
+            "cros_ec_dev", "cros_ec_chardev", "gsmi", "chromeos_acpi", "nvram", "mtd", "spi_nor", "spidev",
+            "intel_quicki2c", "intel_quickspi", "at24", "cros_hps_i2c", "i2c_cros_ec_tunnel",
+            "cros_peripheral_charger", "cros_ec_spi", "cros_ec_i2c", "cros_ec_ishtp", "cros_ec_sysfs",
+            "cros_ec_vbc", "cros_ec_typec", "cros_typec_switch", "cros_usbpd_notify", "cros_usbpd_charger",
+            "cros_usbpd_logger", "cros_charge_control", "cros_ec_ucsi", "cros_ec_keyb", "cros_ec_sensorhub",
+            "cros_ec_sensors_core", "cros_ec_sensors", "cros_ec_accel_legacy", "cros_ec_baro",
+            "cros_ec_lid_angle", "cros_ec_light_prox", "cros_ec_lightbar", "cros_ec_pwrmon", "cros_ec_cec",
+            "leds_cros_ec", "hid_google_hammer", "wilco_ec", "wilco_charger", "wilco_ec_debugfs",
+            "wilco_ec_telem", "rtc_wilco_ec"]
+
+[modules]
+# What a profile may name under [modules]. Each item is "<profile-id> <module> <dir>".
+# dir vendor = /vendor/lib/modules (stock vendor_dlkm). dir dev = /vendor/lib/dev-modules
+# (GBOS_DEV_KERNEL_DIR, staged by builder/vendor.sh).
+# unblock may name only modules on the stock vendor_dlkm modules.blocklist. That set is
+# STOCK_MODULES_BLOCKLIST in builder/lib/devprofile.py (one place): today snd_hda_intel,
+# the single line "blocklist snd_hda_intel" in the shipped vendor_dlkm file. This builder
+# does not rewrite vendor_dlkm (super logical partition; no hashtree/vbmeta update for it).
+# The early-boot command omits -b, so that userspace file is not applied. load must not
+# name those modules. kernel module_blacklist= still applies at load time.
+# Names in blacklist.required, in _NEVER_SHIP_KO, or in the storage/firmware-update names
+# the kconfig gate already maps (nvme, sdhci, mtd/spi-nor, thunderbolt, tpm, ccp, …) are refused.
+# kano is absent: it uses SOF, not snd_hda_intel. generic-x86 is absent: the hardware is unknown.
+# A later name may be listed only when every earlier name in this list is listed too,
+# whether that earlier row is vendor or dev (bluetooth before btusb).
+unblock = ["amd-hx370 snd_hda_intel vendor"]
+load = ["amd-hx370 bluetooth dev", "amd-hx370 btusb vendor", "amd-hx370 snd_hda_codec_alc269 vendor", "amd-hx370 iwlmvm vendor"]

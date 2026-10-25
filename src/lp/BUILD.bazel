@@ -1,0 +1,15 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
+
+package(default_visibility = ["//visibility:public"])
+
+cc_library(
+    name = "lp_lib",
+    srcs = ["lp_metadata.cc"],
+    hdrs = ["lp_metadata.h"],
+)
+
+cc_binary(
+    name = "lp_tool",
+    srcs = ["lp_tool.cc"],
+    deps = [":lp_lib"],
+)

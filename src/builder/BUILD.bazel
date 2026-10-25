@@ -1,0 +1,21 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary")
+
+package(default_visibility = ["//visibility:public"])
+
+cc_binary(
+    name = "googlebookos_builder",
+    srcs = ["googlebookos_builder.cc"],
+    deps = [
+        "//src/audio:marasov_audio_lib",
+        "//src/boot:bootimg_lib",
+        "//src/common:sha256_util",
+        "//src/erofs:erofs_lib",
+        "//src/fat32:fat32_lib",
+        "//src/gpt:gpt_lib",
+        "//src/installer:googlebookos_installer_lib",
+        "//src/kmod:kmod_lib",
+        "//src/lp:lp_lib",
+        "//src/profile:googlebookos_profile_lib",
+        "//src/vendor:vendor_patcher_lib",
+    ],
+)

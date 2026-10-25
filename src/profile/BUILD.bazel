@@ -1,0 +1,15 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
+
+package(default_visibility = ["//visibility:public"])
+
+cc_library(
+    name = "googlebookos_profile_lib",
+    srcs = ["googlebookos_profile.cc"],
+    hdrs = ["googlebookos_profile.h"],
+)
+
+cc_binary(
+    name = "profile_tool",
+    srcs = ["profile_tool.cc"],
+    deps = [":googlebookos_profile_lib"],
+)

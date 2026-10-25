@@ -1,0 +1,16 @@
+package(default_visibility = ["//visibility:public"])
+
+alias(
+    name = "googlebookos_builder",
+    actual = "//src/builder:googlebookos_builder",
+)
+
+alias(
+    name = "googlebookos_installer",
+    actual = "//src/installer:googlebookos_installer",
+)
+
+alias(
+    name = "lz4",
+    actual = "//src/common:lz4",
+)

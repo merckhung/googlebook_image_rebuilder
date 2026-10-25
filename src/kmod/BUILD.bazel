@@ -1,0 +1,16 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
+
+package(default_visibility = ["//visibility:public"])
+
+cc_library(
+    name = "kmod_lib",
+    srcs = ["kmod_verifier.cc"],
+    hdrs = ["kmod_verifier.h"],
+    deps = ["//src/common:sha256_util"],
+)
+
+cc_binary(
+    name = "kmod_tool",
+    srcs = ["kmod_tool.cc"],
+    deps = [":kmod_lib"],
+)

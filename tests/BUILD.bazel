@@ -1,0 +1,22 @@
+load("@rules_cc//cc:defs.bzl", "cc_test")
+
+cc_test(
+    name = "googlebookos_unit_test",
+    size = "small",
+    srcs = ["googlebookos_unit_test.cc"],
+    deps = [
+        "//src/audio:marasov_audio_lib",
+        "//src/boot:bootimg_lib",
+        "//src/common:lz4_codec",
+        "//src/common:sha256_util",
+        "//src/erofs:erofs_lib",
+        "//src/fat32:fat32_lib",
+        "//src/fetch:http_zip_lib",
+        "//src/gpt:gpt_lib",
+        "//src/installer:googlebookos_installer_lib",
+        "//src/kmod:kmod_lib",
+        "//src/lp:lp_lib",
+        "//src/profile:googlebookos_profile_lib",
+        "//src/vendor:vendor_patcher_lib",
+    ],
+)

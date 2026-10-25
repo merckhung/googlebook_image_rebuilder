@@ -1,0 +1,35 @@
+{
+  "recovery_build": "16658739",
+  "models": {
+    "screebo": {
+      "build": "passed",
+      "boot": "passed",
+      "integrated_selftest": false,
+      "image_sha256": "ad7e424cf6cbc06404ea5e5faa20b9004e8d6b36ed94183418e0055d211b76f4",
+      "artifact": "out/googlebook-cx5403-16658739.img.zst",
+      "archive_sha256": "e800c68ca21bd7af3e9cb536cd0189d7ce84e21b948f3cb114b512075fc710c5",
+      "boot_entry": "quiet"
+    },
+    "marasov": {
+      "build": "passed",
+      "boot": "passed",
+      "integrated_selftest": false,
+      "image_sha256": "aec316ad6d1e99e4d842c4ad1f544d11b338806a3402727ec15bb563e3120913",
+      "artifact": "out/googlebook-cx3402-16658739.img.zst",
+      "archive_sha256": "b376e16d58923c6b20431f9d5154aff8ba2858b22bc0c7867ab0e12fe3e707de",
+      "boot_entry": "quiet"
+    },
+    "lg-15u50u": {
+      "build": "passed",
+      "boot": "passed",
+      "integrated_selftest": false,
+      "image_sha256": "96b9a48f15c271418e9cdab98bbbbc054f82d0549d4924c916a7944fbbfdad65",
+      "artifact": "out/googlebook-lg-15u50u-16658739.img.zst",
+      "archive_sha256": "0292d42bc6eafe40b87a2768fc662773cf34798eb9259995ca3158204c3d3de9",
+      "boot_timeout_seconds": 600,
+      "note": "Android boot completion and the public release fingerprint were verified using the existing serial-debug UEFI menu entry. The first quiet-entry attempt timed out.",
+      "boot_entry": "serial-debug",
+      "initial_quiet_boot": "timed out after 420 seconds"
+    }
+  }
+}

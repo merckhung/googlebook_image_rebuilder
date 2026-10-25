@@ -1,0 +1,15 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
+
+package(default_visibility = ["//visibility:public"])
+
+cc_library(
+    name = "erofs_lib",
+    srcs = ["erofs.cc"],
+    hdrs = ["erofs.h"],
+)
+
+cc_binary(
+    name = "erofs_tool",
+    srcs = ["erofs_tool.cc"],
+    deps = [":erofs_lib"],
+)

@@ -1,0 +1,16 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
+
+package(default_visibility = ["//visibility:public"])
+
+cc_library(
+    name = "gpt_lib",
+    srcs = ["gpt.cc"],
+    hdrs = ["gpt.h"],
+    deps = ["//src/common:sha256_util"],
+)
+
+cc_binary(
+    name = "gpt_tool",
+    srcs = ["gpt_tool.cc"],
+    deps = [":gpt_lib"],
+)

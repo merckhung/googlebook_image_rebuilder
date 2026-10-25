@@ -1,0 +1,13 @@
+# XBOOTLDR entry that starts gbos-install. setup-stick.sh and tests/stick/qemu-install.py render it: the maintenance
+# root's partition GUID for the ROOT_PARTUUID placeholder, and the initcalls of builtin-initcalls.txt (comma-separated,
+# in file order) for the INITCALL_BLACKLIST placeholder. module_blacklist: every module of profiles/kano/profile.toml
+# blacklist.modules (the Android entries' list), cros_ec_proto and mei_me, 8250_dw, intel_lpss_pci, intel_lpss, intel_lpss_acpi,
+# i915, tpm_crb and cros_kbd_led_backlight; nvme stays allowed. module_blacklist cannot stop a built-in driver: those (TPM, nvram in the Arch
+# kernel) are blocked by initcall_blacklist; setup-stick.sh refuses a built-in blocked module that builtin-initcalls.txt
+# does not cover, or an Android entry blocking a module missing here. lockdown=integrity: no /dev/mem, /dev/port,
+# iopl/ioperm or MSR writes, even for root. gbos-install refuses to run without lockdown, efi=noruntime, the initcall
+# blocks and this whole module_blacklist (setup-stick.sh installs it as module-blacklist.txt).
+title Install Googlebook to the internal disk
+linux /vmlinuz-linux
+initrd /initramfs-linux.img
+options root=PARTUUID=@ROOT_PARTUUID@ rw rootwait console=tty0 quiet loglevel=3 lockdown=integrity efi=noruntime module_blacklist=cros_ec_debugfs,tpm_tis_i2c_cr50,cros_ec_lpcs,cros_ec_usb,spi_intel_pci,spi_intel,i2c_dev,thunderbolt,tpm,tpm_tis,tpm_tis_core,tpm_tis_spi,tpm_crb,cros_ec,cros_ec_proto,cros_kbd_led_backlight,cros_ec_dev,cros_ec_chardev,gsmi,chromeos_acpi,nvram,mtd,spi_nor,spidev,intel_quicki2c,intel_quickspi,at24,cros_hps_i2c,i2c_cros_ec_tunnel,cros_peripheral_charger,cros_ec_spi,cros_ec_i2c,cros_ec_ishtp,cros_ec_sysfs,cros_ec_vbc,cros_ec_typec,cros_typec_switch,cros_usbpd_notify,cros_usbpd_charger,cros_usbpd_logger,cros_charge_control,cros_ec_ucsi,cros_ec_keyb,cros_ec_sensorhub,cros_ec_sensors_core,cros_ec_sensors,cros_ec_accel_legacy,cros_ec_baro,cros_ec_lid_angle,cros_ec_light_prox,cros_ec_lightbar,cros_ec_pwrmon,cros_ec_cec,leds_cros_ec,hid_google_hammer,wilco_ec,wilco_charger,wilco_ec_debugfs,wilco_ec_telem,rtc_wilco_ec,mei_me,8250_dw,intel_lpss_pci,intel_lpss,intel_lpss_acpi,i915 initcall_blacklist=@INITCALL_BLACKLIST@ panic=0 xe.force_probe=46a6 xe.enable_dpt=0 xe.enable_psr=0 xe.enable_fbc=0 gbos.install=1

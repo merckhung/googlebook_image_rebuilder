@@ -1,0 +1,15 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
+
+package(default_visibility = ["//visibility:public"])
+
+cc_library(
+    name = "marasov_audio_lib",
+    srcs = ["marasov_audio.cc"],
+    hdrs = ["marasov_audio.h"],
+)
+
+cc_binary(
+    name = "audio_tool",
+    srcs = ["audio_tool.cc"],
+    deps = [":marasov_audio_lib"],
+)

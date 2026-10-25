@@ -1,0 +1,10 @@
+build --cxxopt=-std=c++20
+build --cxxopt=-Wall
+build --cxxopt=-Wextra
+build --cxxopt=-Wno-unused-parameter
+build --host_cxxopt=-std=c++20
+build --linkopt=-fuse-ld=bfd
+build --host_linkopt=-fuse-ld=bfd
+build --features=-supports_start_end_lib
+build --host_features=-supports_start_end_lib
+test --test_output=errors

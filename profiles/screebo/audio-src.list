@@ -1,0 +1,9 @@
+# SCREEBO audio sources from chromiumos/overlays/board-overlays (https://chromium.googlesource.com/chromiumos/overlays/board-overlays)
+# at commit b14904496ccf0fc686959065553f07c27536188c. Fetched by builder/fetch-inputs.sh, not stored here.
+# <file> <path in board-overlays> <sha256>
+HiFi.conf                 overlay-rex/chromeos-base/chromeos-bsp-rex/files/screebo/audio/ucm-config/sof-rt5682.screebo/HiFi.conf                3d99d6ca6cf66b80ab868639cdf0513fdb9e691e42e41de7e40a8cdcef938131
+sof-rt5682.screebo.conf   overlay-rex/chromeos-base/chromeos-bsp-rex/files/screebo/audio/ucm-config/sof-rt5682.screebo/sof-rt5682.screebo.conf  e6fbe54f3a465172c5fe14754c1af74434eb3bee991a32e4a5a2a093b7633c4f
+sof-rt5682.card_settings  overlay-rex/chromeos-base/chromeos-bsp-rex/files/screebo/audio/cras-config/sof-rt5682.card_settings                3fa4ba970e121519ad414ef5b9623b41fab4650489167ed40e2f3fbd34c5f062
+board.ini                 overlay-rex/chromeos-base/chromeos-bsp-rex/files/screebo/audio/cras-config/board.ini                              80c2e2b281b874cc7c21672246f8b9b1947f19b194ca7fd37760f81adbdb224e
+dsp.ini                   overlay-rex/chromeos-base/chromeos-bsp-rex/files/screebo/audio/cras-config/dsp.ini                                2bb5f9a0a288b0458977c6f75dc1c0ef08ac34d235a874c7e1c2ffa3d6f5254e
+apm.ini                   overlay-rex/chromeos-base/chromeos-bsp-rex/files/screebo/audio/cras-config/apm.ini                                e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855

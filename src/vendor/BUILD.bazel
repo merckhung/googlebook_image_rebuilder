@@ -1,0 +1,20 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
+
+package(default_visibility = ["//visibility:public"])
+
+cc_library(
+    name = "vendor_patcher_lib",
+    srcs = ["vendor_patcher.cc"],
+    hdrs = ["vendor_patcher.h"],
+    deps = [
+        "//src/audio:marasov_audio_lib",
+        "//src/erofs:erofs_lib",
+        "//src/profile:googlebookos_profile_lib",
+    ],
+)
+
+cc_binary(
+    name = "vendor_tool",
+    srcs = ["vendor_tool.cc"],
+    deps = [":vendor_patcher_lib"],
+)

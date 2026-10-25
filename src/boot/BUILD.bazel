@@ -1,0 +1,20 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
+
+package(default_visibility = ["//visibility:public"])
+
+cc_library(
+    name = "bootimg_lib",
+    srcs = ["bootimg.cc"],
+    hdrs = ["bootimg.h"],
+    deps = [
+        "//src/common:lz4_codec",
+        "//src/common:sha256_util",
+        "//src/gpt:gpt_lib",
+    ],
+)
+
+cc_binary(
+    name = "bootimg_tool",
+    srcs = ["bootimg_tool.cc"],
+    deps = [":bootimg_lib"],
+)

@@ -1,0 +1,20 @@
+{
+  "default": "16658739",
+  "catalog": "https://dl.google.com/dl/edgedl/device/recovery/production_recovery.json",
+  "recoveries": {
+    "16452207": {
+      "url": "https://dl.google.com/device/recovery/lapis-user/16452207/recovery.zip",
+      "zip_sha256": "5bc64936c11d9eb268da03063a443b8fd0bbc0f84d266f9a014231653939f247",
+      "image_sha256": "b10f519ad9b834b316bc3c9d7c33fc45438a8d1c69254c124b7c3cdf72d288c7",
+      "image_bytes": 19069493760,
+      "member": "android-desktop_signed_recovery_image.bin"
+    },
+    "16658739": {
+      "url": "https://dl.google.com/device/recovery/lapis-user/16658739/recovery.zip",
+      "zip_sha256": "97980097708f472962ba267d3801211eadbe9e3a8fa61408846ed23b3147b9e7",
+      "image_sha256": "7180493e2efed15611859c03113d1787d10d9f104be32dfd080be420e5e52f27",
+      "image_bytes": 19069493760,
+      "member": "android-desktop_signed_recovery_image.bin"
+    }
+  }
+}

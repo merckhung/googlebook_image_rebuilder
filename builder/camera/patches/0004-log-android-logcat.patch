@@ -1,0 +1,16 @@
+--- a/src/libcamera/base/log.cpp
++++ b/src/libcamera/base/log.cpp
+@@ -604,6 +604,13 @@ Logger::Logger()
+ 		wantColor = true;
+ 
+ 	logSetStream(&std::cerr, wantColor);
++#ifdef __ANDROID__
++	/*
++	 * Googlebook KANO: an Android HAL service has no stderr; log to logcat
++	 * (bionic's syslog) unless LIBCAMERA_LOG_FILE says otherwise.
++	 */
++	logSetTarget(LoggingTargetSyslog);
++#endif
+ 
+ 	parseLogFile();
+ 	parseLogLevels();

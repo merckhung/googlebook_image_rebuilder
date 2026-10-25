@@ -1,0 +1,16 @@
+--- a/src/libcamera/ipa_manager.cpp
++++ b/src/libcamera/ipa_manager.cpp
+@@ -313,7 +313,12 @@ bool IPAManager::isSignatureValid([[maybe_unused]] IPAModule *ipa) const
+ 
+ 	return valid;
+ #else
+-	return false;
++	/*
++	 * Googlebook KANO: built without a crypto library. The IPA modules ship
++	 * in the dm-verity protected vendor partition next to libcamera itself,
++	 * so they are trusted and run in-process instead of isolated.
++	 */
++	return true;
+ #endif
+ }
+ 

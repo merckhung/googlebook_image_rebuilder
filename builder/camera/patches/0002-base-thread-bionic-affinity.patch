@@ -1,0 +1,15 @@
+--- a/src/libcamera/base/thread.cpp
++++ b/src/libcamera/base/thread.cpp
+@@ -462,7 +462,12 @@ void Thread::setThreadAffinityInternal()
+ 		return;
+ 
+ 	const cpu_set_t &cpuset = data_->cpuset_.value();
++#ifdef __BIONIC__
++	/* bionic has no pthread_setaffinity_np() */
++	sched_setaffinity(pthread_gettid_np(thread_.native_handle()), sizeof(cpuset), &cpuset);
++#else
+ 	pthread_setaffinity_np(thread_.native_handle(), sizeof(cpuset), &cpuset);
++#endif
+ }
+ 
+ /**

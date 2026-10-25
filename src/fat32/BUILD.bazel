@@ -1,0 +1,15 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
+
+package(default_visibility = ["//visibility:public"])
+
+cc_library(
+    name = "fat32_lib",
+    srcs = ["fat32.cc"],
+    hdrs = ["fat32.h"],
+)
+
+cc_binary(
+    name = "fat32_tool",
+    srcs = ["fat32_tool.cc"],
+    deps = [":fat32_lib"],
+)

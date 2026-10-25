@@ -1,0 +1,14 @@
+# Blocked drivers that module_blacklist cannot stop because the maintenance kernel (7.2.7-arch1-1) builds them in
+# (CONFIG_TCG_TPM=y, CONFIG_TCG_TIS=y, nvram): each is kept from starting with initcall_blacklist=<its initcall>.
+#   <module>  <initcall>                        the initcall is blocked in the installer entry
+#   <module>  -  <initcall>,<initcall>...       no initcall of its own; accepted only while all listed initcalls are blocked
+# setup-stick.sh refuses when a blocked module is built in and not listed here; it renders the entry's
+# initcall_blacklist from this file and installs it as /usr/local/share/gbos-install/builtin-initcalls.txt, where
+# gbos-install checks at runtime that /proc/cmdline blocks every initcall below and that no TPM or nvram device exists.
+# tests/stick/qemu-install.py reads the same file. Every module here must also be in the entry's module_blacklist.
+mei_me        mei_me_driver_init     # drivers/misc/mei/pci-me.c; a module in Arch, blocked both ways like the Android entries
+tpm           tpm_init               # drivers/char/tpm/tpm-interface.c, subsys_initcall: the tpm class and /dev/tpm* never appear
+tpm_tis       init_tis               # drivers/char/tpm/tpm_tis.c, module_init
+tpm_crb       crb_acpi_driver_init   # drivers/char/tpm/tpm_crb.c, module_acpi_driver
+nvram         nvram_module_init      # drivers/char/nvram.c, module_init: no /dev/nvram (CMOS NVRAM)
+tpm_tis_core  -  tpm_init,init_tis,crb_acpi_driver_init   # library, no initcall: only TPM drivers call it, and those are blocked

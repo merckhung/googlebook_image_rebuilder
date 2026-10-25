@@ -1,0 +1,19 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
+
+package(default_visibility = ["//visibility:public"])
+
+cc_library(
+    name = "googlebookos_installer_lib",
+    srcs = ["googlebookos_installer.cc"],
+    hdrs = ["googlebookos_installer.h"],
+    deps = [
+        "//src/fat32:fat32_lib",
+        "//src/gpt:gpt_lib",
+    ],
+)
+
+cc_binary(
+    name = "googlebookos_installer",
+    srcs = ["installer_main.cc"],
+    deps = [":googlebookos_installer_lib"],
+)

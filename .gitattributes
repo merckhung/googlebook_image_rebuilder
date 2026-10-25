@@ -1,0 +1,6 @@
+# Patch context preserves upstream whitespace byte-for-byte.
+*.patch -whitespace
+# This raw shell template contains a literal space/tab/newline IFS value.
+builder/lib/kano_autooff.py whitespace=-blank-at-eol
+# Keep media bytes unchanged on every platform.
+*.mp4 binary

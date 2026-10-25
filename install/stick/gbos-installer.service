@@ -1,0 +1,15 @@
+[Unit]
+Description=Googlebook installer (only when booted with gbos.install=1)
+ConditionKernelCommandLine=gbos.install=1
+After=local-fs.target systemd-udev-settle.service
+Wants=systemd-udev-settle.service
+Conflicts=getty@tty1.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/gbos-install
+StandardInput=null
+StandardOutput=journal
+
+[Install]
+WantedBy=multi-user.target

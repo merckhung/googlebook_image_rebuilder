@@ -1,0 +1,26 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
+
+package(default_visibility = ["//visibility:public"])
+
+cc_library(
+    name = "sha256_util",
+    srcs = ["sha256.cc"],
+    hdrs = ["sha256.h"],
+    linkopts = [
+        "-lcrypto",
+        "-lz",
+    ],
+)
+
+cc_library(
+    name = "lz4_codec",
+    srcs = ["lz4_frame.cc"],
+    hdrs = ["lz4_frame.h"],
+    deps = [":sha256_util"],
+)
+
+cc_binary(
+    name = "lz4",
+    srcs = ["lz4_cli.cc"],
+    deps = [":lz4_codec"],
+)

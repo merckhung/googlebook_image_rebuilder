@@ -1,0 +1,15 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
+
+package(default_visibility = ["//visibility:public"])
+
+cc_library(
+    name = "http_zip_lib",
+    srcs = ["http_zip.cc"],
+    hdrs = ["http_zip.h"],
+)
+
+cc_binary(
+    name = "fetch_tool",
+    srcs = ["fetch_tool.cc"],
+    deps = [":http_zip_lib"],
+)

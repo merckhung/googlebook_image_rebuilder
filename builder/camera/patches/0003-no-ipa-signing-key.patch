@@ -1,0 +1,16 @@
+--- a/src/meson.build
++++ b/src/meson.build
+@@ -15,8 +15,11 @@
+          }, section : 'Paths')
+ 
+ # Module Signing
+-openssl = find_program('openssl', required : false)
+-if openssl.found()
++# Googlebook KANO: no signing key. The device has no crypto library to verify signatures; IPA modules are trusted
++# because they ship in the dm-verity protected vendor partition (see ipa_manager.cpp), and a random build-time key
++# would make every build differ.
++openssl = disabler()
++if false
+     ipa_priv_key = custom_target('ipa-priv-key',
+                                  output : ['ipa-priv-key.pem'],
+                                  command : [gen_ipa_priv_key, '@OUTPUT@'])

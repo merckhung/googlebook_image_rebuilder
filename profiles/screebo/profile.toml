@@ -1,0 +1,156 @@
+# SCREEBO: ASUS ExpertBook CX54 Chromebook Plus (Model CX5403CMA, Intel Core Ultra 5 115U, Meteor Lake-U, rex/screebo)
+# with MrChromebox UEFI firmware.
+# Hardware summary (ChromeOS project/rex/screebo config.star, coreboot mainboard/google/rex/variants/screebo):
+#   Chassis:  14.0" 16:10 clamshell (touch and non-touch SKUs), keyboard backlight, fingerprint reader (FPMCU on GSPI1)
+#   CPU:      Intel Core Ultra 5 115U (Meteor Lake-U, 2P+4E+2LPE, 10 threads)
+#   GPU:      Intel Graphics, 4 Xe cores (Meteor Lake-U; xe driver, mtl_* DMC/GuC/HuC/GSC firmware)
+#   Storage:  M.2 NVMe (hidden from the USB image by the safety tail's initcall_blacklist=nvme_init)
+#   Audio:    sof-rt5682 (ALSA id sofrt5682; Realtek ALC5682I headset codec RTL5682 on I2C0 + ALC1019P speaker amp
+#             RTL1019 on I2S, SOF IPC4: sof-mtl.ri + sof-mtl-rt1019-rt5682.tplg, machine driver mtl_rt5682_def)
+#   Wi-Fi/BT: Intel AX211 on the Meteor Lake CNVi (iwlwifi-ma-b0-gf-a0-89.ucode + intel/ibt-0180-0041.sfi)
+#   Camera:   MIPI OV08X40 (OVTI08F4, I2C5) on IPU6 (Meteor Lake): needs a libcamera HAL overlay, off (camera.libcamera)
+#   Touch:    ILITEK ILTK0001 or ELAN EKTH7B18U touchscreen on I2C1 (touch SKUs), ELAN0000 touchpad on I2C3
+# Not verified on the hardware: status = experimental.
+schema = 1
+kmods = ["gbos_isa_emu", "ac", "gbos_wakefilter", "gbos_efifb"]
+
+[model]
+id = "screebo"
+name = "ASUS ExpertBook CX54 Chromebook Plus (Model CX5403CMA, Core Ultra 5 115U)"
+status = "experimental"
+image_name = "googlebook-cx5403.img"
+dmi = { sys_vendor = "Google", product_name = "Screebo" }
+
+[entries]
+quiet = "Googlebook CX5403 quiet"
+debug = "Googlebook CX5403 safe serial-debug"
+
+[cmdline]
+# Stock lapis options removed for SCREEBO: the lapis SoundWire link mask (SCREEBO's codecs are on I2C/I2S, not
+# SoundWire) and PSR on (replaced in the tail). snd_sof_pci.ipc_type=1 (IPC4) stays: Meteor Lake SOF is IPC4.
+stock_drop = ["snd_intel_sdw_acpi.sdw_link_mask=0x5", "snd_intel_sdw_acpi.sdw_link_mask=0xF", "xe.enable_psr=1"]
+# Appended to stock options of every entry; quiet drops the console/earlycon/log-level tokens again.
+# 0xfe02c000 is the Meteor Lake LPSS console UART BAR (coreboot soc/intel/meteorlake CONSOLE_UART_BASE_ADDRESS).
+# xe.force_probe: 7d45 (Meteor Lake-U Intel Graphics, Core Ultra 5 115U / 7 155U) first, no '*'; the other ids are the
+# Meteor Lake / Arrow Lake ids the lapis xe.ko itself lists (modinfo alias), for sibling CX5403 SKUs.
+add = ["loglevel=8", "ignore_loglevel", "earlycon=uart8250,mmio32,0xfe02c000,115200n8",
+       "xe.force_probe=7d45,7d40,7d55,7dd5,7d41,7d51,7d60,7d67,7dd1"]
+# After the safety tail: panel self refresh off until it is proven on the CX5403 panel.
+tail = ["xe.enable_psr=0"]
+debug_drop = ["8250.nr_uarts=4"]
+# LPSS UART0..2 (7e25, 7e26, 7e52) and the fingerprint GSPI1 (7e30) go to pci-stub so intel-lpss-pci binds only the
+# I2C controllers (I2C0 ALC5682I audio, I2C1 touchscreen, I2C3 ELAN0000 touchpad, I2C5 OV08X40 camera).
+pci_stub_ids = ["8086:7e25", "8086:7e26", "8086:7e52", "8086:7e30"]
+first_stage_drop = ["8250_dw.ko", "intel-lpss-pci.ko", "intel-lpss.ko"]
+
+[blacklist]
+modules = ["cros_ec_debugfs", "tpm_tis_i2c_cr50", "cros_ec_lpcs", "cros_ec_usb", "spi_intel_pci", "spi_intel", "i2c_dev",
+           "thunderbolt", "tpm", "tpm_tis", "tpm_tis_core", "tpm_tis_spi", "cros_ec", "cros_ec_dev", "cros_ec_chardev",
+           "gsmi", "chromeos_acpi", "nvram", "mtd", "spi_nor", "spidev", "intel_quicki2c", "intel_quickspi",
+           "at24", "cros_hps_i2c", "i2c_cros_ec_tunnel", "cros_peripheral_charger",
+           "cros_ec_spi", "cros_ec_i2c", "cros_ec_ishtp", "cros_ec_sysfs", "cros_ec_vbc", "cros_ec_typec", "cros_typec_switch",
+           "cros_usbpd_notify", "cros_usbpd_charger", "cros_usbpd_logger", "cros_charge_control", "cros_ec_ucsi", "cros_ec_keyb",
+           "cros_ec_sensorhub", "cros_ec_sensors_core", "cros_ec_sensors", "cros_ec_accel_legacy", "cros_ec_baro",
+           "cros_ec_lid_angle", "cros_ec_light_prox", "cros_ec_lightbar", "cros_ec_pwrmon", "cros_ec_cec", "leds_cros_ec",
+           "hid_google_hammer", "wilco_ec", "wilco_charger", "wilco_ec_debugfs", "wilco_ec_telem", "rtc_wilco_ec"]
+debug_add = ["8250_dw", "intel_lpss_acpi"]
+allow = ["cros_ec_proto", "cros_kbd_led_backlight"]
+
+[firmware_sources]
+linux_firmware_tag = "20260810"
+sof_bin_url = "https://github.com/thesofproject/sof-bin/releases/download/v2025.12.2/sof-bin-2025.12.2.tar.gz"
+sof_bin_sha256 = "533f63e3a6d94c09ce05a782657b675fa683ff20787c0979226cf563ec79f517"
+
+[[firmware]]                         # Meteor Lake display microcontroller, GuC, HuC and GSC (xe)
+path = "i915/mtl_dmc.bin"
+from = "linux-firmware"
+src = "i915/mtl_dmc.bin"
+sha256 = "1b3b826195d50fae6611d29e0eb348e641a3ada3e0436ee0b987124f47a0e0db"
+[[firmware]]
+path = "i915/mtl_guc_70.bin"
+from = "linux-firmware"
+src = "i915/mtl_guc_70.bin"
+sha256 = "7794f0b6abe5fcd9c6f47035dafe2199f30a6e7d230bd5a53fbf8005a60e5911"
+[[firmware]]
+path = "i915/mtl_huc_gsc.bin"
+from = "linux-firmware"
+src = "i915/mtl_huc_gsc.bin"
+sha256 = "3ea23f39e946122d1446565d1a07c0866bf3e3c8819b43134925371d877ca4cd"
+[[firmware]]
+path = "i915/mtl_gsc_1.bin"
+from = "linux-firmware"
+src = "i915/mtl_gsc_1.bin"
+sha256 = "01e8e2bb0eae90e3b4471703bb04d1bd13adb43373480fb10be6f101b877e0f3"
+[[firmware]]                         # AX211 Wi-Fi on the Meteor Lake CNVi (iwlmvm)
+path = "iwlwifi-ma-b0-gf-a0-89.ucode"
+from = "linux-firmware"
+src = "intel/iwlwifi/iwlwifi-ma-b0-gf-a0-89.ucode"
+sha256 = "fd69e6042821a42a62da44112346066a5c88556193b15a188b397dabe711f768"
+[[firmware]]
+path = "iwlwifi-ma-b0-gf-a0.pnvm"
+from = "linux-firmware"
+src = "intel/iwlwifi/iwlwifi-ma-b0-gf-a0.pnvm"
+sha256 = "6b1526daa6552dcab485675f5ae1214ad6ab7c17414dae3c75ed1c36d53e8631"
+[[firmware]]                         # AX211 Bluetooth on Meteor Lake (ChromeOS linux_firmware_ibt_ax211_mtl)
+path = "intel/ibt-0180-0041.sfi"
+from = "linux-firmware"
+src = "intel/ibt-0180-0041.sfi"
+sha256 = "205f22d76408283bad6d26e1fe21cc30cdb0c331b41de1e6d093c9ea2401feaa"
+[[firmware]]
+path = "intel/ibt-0180-0041.ddc"
+from = "linux-firmware"
+src = "intel/ibt-0180-0041.ddc"
+sha256 = "fe272982577efdc289cfe3e8bedafca607c0b7d6c9df1aab1880e22ef930d077"
+[[firmware]]                         # IPU6 (Meteor Lake) for the OV08X40 MIPI camera (intel-ipu6 probe)
+path = "intel/ipu/ipu6epmtl_fw.bin"
+from = "linux-firmware"
+src = "intel/ipu/ipu6epmtl_fw.bin"
+sha256 = "5d563b75e53167f2a20f5bffbb6db1912c5a4c8e19bdc233ffd5e0e59cf51095"
+[[firmware]]                         # SOF DSP (IPC4, Intel-signed) and the rt1019 + rt5682 topology
+path = "intel/sof-ipc4/mtl/sof-mtl.ri"
+from = "sof-bin"
+src = "sof-bin-2025.12.2/sof-ipc4/mtl/intel-signed/sof-mtl.ri"
+sha256 = "b549c4447cbd92c636feb6993a75ae0a6b1d831336d2723b82c9fcc03c0ae778"
+# SCREEBO requests the community-signed DSP image at this exact path.
+[[firmware]]
+path = "intel/sof-ipc4/mtl/community/sof-mtl.ri"
+from = "sof-bin"
+src = "sof-bin-2025.12.2/sof-ipc4/mtl/community/sof-mtl.ri"
+sha256 = "f26f251f36e3fece5da4469d23363295ec5f7f9bf423634051628c4e9d64926f"
+[[firmware]]
+path = "intel/sof-ipc4-tplg/sof-mtl-rt1019-rt5682.tplg"
+from = "sof-bin"
+src = "sof-bin-2025.12.2/sof-ipc4-tplg/sof-mtl-rt1019-rt5682.tplg"
+sha256 = "5e3a0431cb7c3786d3f1e89d3f52b245bf81db2bc1023e40097c35d7313d5e6b"
+
+[audio]
+# card sof-rt5682 (Realtek ALC5682I headset + ALC1019P speaker amp, SOF IPC4); DRAS files written by vendor.py
+card = "sof-rt5682"
+config_dir = "sof-rt5682_screebo"
+sources = "audio-src.list"
+
+[wifi]
+modprobe = ["iwlmvm"]
+
+[display]
+stack = "native"
+fallback = "gop-swiftshader"
+# client composition until device composition is proven on Meteor Lake with this xe build
+hwc_backend = "client"
+build_prop_set = [["vendor.hwc.drm.enable_color_pipeline", "true", "false"],
+                  ["vendor.hwc.drm.force_color_mode", "13", "0"],
+                  ["vendor.hwc.drm.persistent_hdr", "true", "false"],
+                  ["vendor.hwc.use_log_gamma_lut", "true", "false"],
+                  ["ro.surface_flinger.has_wide_color_display", "true", "false"],
+                  ["ro.surface_flinger.has_HDR_display", "true", "false"]]
+
+[input]
+kbd_backlight_leds = "/sys/devices/platform/GOOG0004:00/GOOG0002:00/leds"
+power_button = "acpi"
+
+[camera]
+# SCREEBO's camera is MIPI OV08X40 on IPU6, not USB UVC: it needs a libcamera overlay built for OV08X40
+libcamera = false
+
+[hooks]
+vendor = "vendor.py"

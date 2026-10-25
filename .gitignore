@@ -1,0 +1,16 @@
+/work/
+/out/
+/bazel-*
+*.img
+*.img.*
+*.zip
+*.bin
+*.ko
+*.pem
+*.key
+*.pub
+*.rom
+*.pyc
+__pycache__/
+.env
+.DS_Store

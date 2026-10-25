@@ -1,0 +1,152 @@
+# LG gram Book 15U50U-H.AR55U1 (Best Buy SKU 6670656).
+# Published hardware: Core Ultra 5 115U, 8GB, 512GB NVMe, FHD touch, AX203 Wi-Fi.
+# Physical DMI/audio identified on 15U50U-H.AR55U1; other peripherals remain experimental.
+schema = 1
+kmods = ["gbos_isa_emu", "ac", "gbos_efifb"]
+
+[model]
+id = "lg-15u50u"
+name = "LG gram Book 15U50U-H.AR55U1 (Core Ultra 5 115U)"
+status = "experimental"              # verified | experimental | probe-only
+image_name = "googlebook-lg-15u50u.img"
+dmi = {sys_vendor = "LG Electronics", product_name = "15U50U-H.AR55U1"}
+
+[entries]                            # systemd-boot menu titles
+quiet = "Googlebook LG15U50U quiet"
+debug = "Googlebook LG15U50U serial-debug"
+
+[cmdline]
+stock_drop = ["snd_intel_sdw_acpi.sdw_link_mask=0x5", "snd_intel_sdw_acpi.sdw_link_mask=0xF", "xe.enable_psr=1"]
+# serial-debug: the legacy COM1 port only (no machine-specific MMIO UART); quiet drops the console and log level again
+add = ["loglevel=8", "ignore_loglevel", "console=ttyS0,115200n8", "xe.force_probe=7d45"]
+tail = ["xe.enable_psr=0"]
+debug_drop = []
+pci_stub_ids = []
+first_stage_drop = []
+
+[blacklist]
+# Keep the standard firmware and internal-storage protections during live USB boot.
+modules = ["cros_ec_debugfs", "tpm_tis_i2c_cr50", "cros_ec_lpcs", "cros_ec_usb", "spi_intel_pci", "spi_intel", "i2c_dev",
+           "thunderbolt", "tpm", "tpm_tis", "tpm_tis_core", "tpm_tis_spi", "cros_ec", "cros_ec_dev", "cros_ec_chardev",
+           "gsmi", "chromeos_acpi", "nvram", "mtd", "spi_nor", "spidev", "intel_quicki2c", "intel_quickspi",
+           "at24", "cros_hps_i2c", "i2c_cros_ec_tunnel", "cros_peripheral_charger",
+           "cros_ec_spi", "cros_ec_i2c", "cros_ec_ishtp", "cros_ec_sysfs", "cros_ec_vbc", "cros_ec_typec", "cros_typec_switch",
+           "cros_usbpd_notify", "cros_usbpd_charger", "cros_usbpd_logger", "cros_charge_control", "cros_ec_ucsi", "cros_ec_keyb",
+           "cros_ec_sensorhub", "cros_ec_sensors_core", "cros_ec_sensors", "cros_ec_accel_legacy", "cros_ec_baro",
+           "cros_ec_lid_angle", "cros_ec_light_prox", "cros_ec_lightbar", "cros_ec_pwrmon", "cros_ec_cec", "leds_cros_ec",
+           "hid_google_hammer", "wilco_ec", "wilco_charger", "wilco_ec_debugfs", "wilco_ec_telem", "rtc_wilco_ec",
+           "cros_ec_proto", "cros_kbd_led_backlight"]
+debug_add = []
+allow = []
+
+[firmware_sources]
+linux_firmware_tag = "20260810"
+sof_bin_url = "https://github.com/thesofproject/sof-bin/releases/download/v2025.12.2/sof-bin-2025.12.2.tar.gz"
+sof_bin_sha256 = "533f63e3a6d94c09ce05a782657b675fa683ff20787c0979226cf563ec79f517"
+
+[audio]
+card = "sof-hda-dsp"
+config_dir = "sof-hda-dsp_lg15u50u"
+sources = ""
+
+[wifi]
+modprobe = ["iwlmvm"]
+
+[display]
+stack = "native"
+fallback = "gop-swiftshader"
+# Client composition first; the GOP/SwiftShader fallback also uses this path.
+hwc_backend = "client"
+build_prop_set = [["vendor.hwc.drm.enable_color_pipeline", "true", "false"],
+                  ["vendor.hwc.drm.force_color_mode", "13", "0"],
+                  ["vendor.hwc.drm.persistent_hdr", "true", "false"],
+                  ["vendor.hwc.use_log_gamma_lut", "true", "false"],
+                  ["ro.surface_flinger.has_wide_color_display", "true", "false"],
+                  ["ro.surface_flinger.has_HDR_display", "true", "false"]]
+
+[input]
+kbd_backlight_leds = ""
+power_button = "acpi"
+
+[hooks]
+vendor = "vendor.py"
+
+[[firmware]]
+path = "i915/mtl_dmc.bin"
+from = "linux-firmware"
+src = "i915/mtl_dmc.bin"
+sha256 = "1b3b826195d50fae6611d29e0eb348e641a3ada3e0436ee0b987124f47a0e0db"
+
+[[firmware]]
+path = "i915/mtl_guc_70.bin"
+from = "linux-firmware"
+src = "i915/mtl_guc_70.bin"
+sha256 = "7794f0b6abe5fcd9c6f47035dafe2199f30a6e7d230bd5a53fbf8005a60e5911"
+
+[[firmware]]
+path = "i915/mtl_huc_gsc.bin"
+from = "linux-firmware"
+src = "i915/mtl_huc_gsc.bin"
+sha256 = "3ea23f39e946122d1446565d1a07c0866bf3e3c8819b43134925371d877ca4cd"
+
+[[firmware]]
+path = "i915/mtl_gsc_1.bin"
+from = "linux-firmware"
+src = "i915/mtl_gsc_1.bin"
+sha256 = "01e8e2bb0eae90e3b4471703bb04d1bd13adb43373480fb10be6f101b877e0f3"
+
+[[firmware]]
+path = "iwlwifi-ma-b0-hr-b0-89.ucode"
+from = "linux-firmware"
+src = "intel/iwlwifi/iwlwifi-ma-b0-hr-b0-89.ucode"
+sha256 = "97e31ee83d682ff9dadac78033e5e1f2df3e2950919261c6b6761d8d37d1c632"
+
+[[firmware]]
+path = "intel/ibt-0180-0041.ddc"
+from = "linux-firmware"
+src = "intel/ibt-0180-0041.ddc"
+sha256 = "fe272982577efdc289cfe3e8bedafca607c0b7d6c9df1aab1880e22ef930d077"
+
+[[firmware]]
+path = "intel/ibt-0180-0041.sfi"
+from = "linux-firmware"
+src = "intel/ibt-0180-0041.sfi"
+sha256 = "205f22d76408283bad6d26e1fe21cc30cdb0c331b41de1e6d093c9ea2401feaa"
+
+[[firmware]]
+path = "intel/ibt-0180-1050.ddc"
+from = "linux-firmware"
+src = "intel/ibt-0180-1050.ddc"
+sha256 = "fe272982577efdc289cfe3e8bedafca607c0b7d6c9df1aab1880e22ef930d077"
+
+[[firmware]]
+path = "intel/ibt-0180-1050.sfi"
+from = "linux-firmware"
+src = "intel/ibt-0180-1050.sfi"
+sha256 = "205f22d76408283bad6d26e1fe21cc30cdb0c331b41de1e6d093c9ea2401feaa"
+
+[[firmware]]
+path = "intel/ibt-0180-4150.ddc"
+from = "linux-firmware"
+src = "intel/ibt-0180-4150.ddc"
+sha256 = "fe272982577efdc289cfe3e8bedafca607c0b7d6c9df1aab1880e22ef930d077"
+
+[[firmware]]
+path = "intel/ibt-0180-4150.sfi"
+from = "linux-firmware"
+src = "intel/ibt-0180-4150.sfi"
+sha256 = "205f22d76408283bad6d26e1fe21cc30cdb0c331b41de1e6d093c9ea2401feaa"
+
+# Common Meteor Lake SOF DSP firmware; codec routing awaits a hardware probe.
+# Keep both signing variants available; the driver selects the required path.
+[[firmware]]
+path = "intel/sof-ipc4/mtl/sof-mtl.ri"
+from = "sof-bin"
+src = "sof-bin-2025.12.2/sof-ipc4/mtl/intel-signed/sof-mtl.ri"
+sha256 = "b549c4447cbd92c636feb6993a75ae0a6b1d831336d2723b82c9fcc03c0ae778"
+
+[[firmware]]
+path = "intel/sof-ipc4/mtl/community/sof-mtl.ri"
+from = "sof-bin"
+src = "sof-bin-2025.12.2/sof-ipc4/mtl/community/sof-mtl.ri"
+sha256 = "f26f251f36e3fece5da4469d23363295ec5f7f9bf423634051628c4e9d64926f"

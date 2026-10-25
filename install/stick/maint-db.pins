@@ -1,0 +1,8 @@
+# Maintainer-only digests for the Arch repository databases.
+# install/stick/maint-pin-arch.py checks these bytes before it parses a database.
+# make-maint.sh fetch and assemble do not read this file. They use maint.pins only.
+#   <sha256-lowercase> <size-bytes> <name> <https-url>
+# name is core.db or extra.db. The date is the date in the URL.
+
+48984a2b5a339954dc1a7c21bce7ff651b6b0c7747d0545c36ca454bee005a73 129871 core.db https://archive.archlinux.org/repos/2026/10/01/core/os/x86_64/core.db
+b2c0d01420d9bc1da17589c622fbf12c49af15d60e54f46cad8f6c307b5497ba 8875065 extra.db https://archive.archlinux.org/repos/2026/10/01/extra/os/x86_64/extra.db

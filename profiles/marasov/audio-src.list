@@ -1,0 +1,9 @@
+# MARASOV audio sources from chromiumos/overlays/board-overlays (https://chromium.googlesource.com/chromiumos/overlays/board-overlays)
+# at commit b14904496ccf0fc686959065553f07c27536188c. Fetched by builder/fetch-inputs.sh, not stored here.
+# <file> <path in board-overlays> <sha256>
+HiFi.conf                 overlay-brya/chromeos-base/chromeos-bsp-brya/files/marasov/audio/ucm-config/sof-rt5682.marasov.rt5682vs/HiFi.conf  85289df6400cb48fb52a73c7c538d987e09b94e5694442443cf87402eb66a55e
+HiFi-vd.conf              overlay-brya/chromeos-base/chromeos-bsp-brya/files/marasov/audio/ucm-config/sof-rt5682.marasov/HiFi.conf           045feeb057d98df6923b9656542686ef2609a46a525ab18cbfe2869194f9e850
+sof-rt5682.card_settings  overlay-brya/chromeos-base/chromeos-bsp-brya/files/marasov/audio/cras-config/sof-rt5682.card_settings              be3cb6dda0252cab32e2d6e0f80dd2ceadd1f12d9b786210a4ebfb3df6edf69b
+board.ini                 overlay-brya/chromeos-base/chromeos-bsp-brya/files/marasov/audio/cras-config/board.ini                            352ac2b8f67936ce145dc6cf5f57319d09f986a22202a7b8e042ac894f98eb30
+dsp.ini                   overlay-brya/chromeos-base/chromeos-bsp-brya/files/marasov/audio/cras-config/dsp.ini                              599a13e3a5906434e225eb16ccece88a182a696246e3e3199dd584001e96268c
+apm.ini                   overlay-brya/chromeos-base/chromeos-bsp-brya/files/marasov/audio/cras-config/apm.ini                              0a822ce833c67425082e04b276cb9ba5d0df7181ed66cc4a46d4454be83837a0
