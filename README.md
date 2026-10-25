@@ -34,7 +34,7 @@ an image. Build and boot-check results are recorded in
 | --- | --- | --- | --- |
 | ASUS Chromebook Plus CX34 / CX3402 | `marasov` | Passed | Passed |
 | ASUS ExpertBook CX54 / CX5403 | `screebo` | Passed | Passed |
-| LG gram Book 15U50U-H.AR55U1 | `lg-15u50u` | Passed | Passed (serial debug) |
+| LG gram Book 15U50U-H.AR55U1 | `lg-15u50u` | Passed | Passed |
 <!-- BUILD_RESULTS_END -->
 
 ## Demo video
